@@ -79,11 +79,11 @@ const target = proxyquire('./national-insurance', {
 test('national-insurance', (t) => {
   [
     [0, '0.00', 'No NI on zero income'],
-    [ALLOWANCE-1, '98.14', 'No NI on income < allowance'],
-    [ALLOWANCE, '98.28', 'No NI on income == allowance'],
-    [ALLOWANCE + 1000, '238.28', 'NI on income > allowance'],
-    [BASIC_CEILING, '540.82', 'NI on income == max 12% amount'],
-    [BASIC_CEILING + 1000, '680.82', 'NI on income > max 12% amount'],
+    [ALLOWANCE - 1, '0.00', 'No NI on income < allowance'],
+    [ALLOWANCE, '0.00', 'No NI on income == allowance'],
+    [ALLOWANCE + 1000, '120.00', 'NI on income > allowance'],
+    [BASIC_CEILING, '379.32', 'NI on income == max 12% amount'],
+    [BASIC_CEILING + 1000, '399.32', 'NI on income > max 12% amount'],
   ].forEach(([grossIncome, expectedNi, message]) => {
     t.test(message, (assert) => {
       assert.plan(1);
@@ -133,12 +133,12 @@ test('national-insurance.slice', (t) => {
     [0, 5, 0, 0, 'zero when input == zero'],
     [0, 5, 3, 3, 'number when within zero-floored range'],
     [0, 5, 5, 5, 'number when input == ceiling'],
-    [0, 5, 5, 5, 'full slice when input > ceiling with zero floor'],
-    [5, 10, 0, 0, 'zero when input == floor'],
-    [5, 10, 1, 1, 'number when within nonzero-floored range'],
-    [5, 10, 5, 5, 'number when input == ceiling with nonzero floor'],
-    [5, 15, 10, 10, 'full slice when input > ceiling with nonzero floor'],
-    [5, 15, 0, 0, 'zero when input < floor'],
+    [0, 5, 6, 5, 'full slice when input > ceiling with zero floor'],
+    [5, 10, 5, 0, 'zero when input == floor'],
+    [5, 10, 6, 1, 'number when within nonzero-floored range'],
+    [5, 10, 10, 5, 'number when input == ceiling with nonzero floor'],
+    [5, 15, 18, 10, 'full slice when input > ceiling with nonzero floor'],
+    [5, 15, 4, 0, 'zero when input < floor'],
 
   ].forEach(([floor, ceil, input, expected, message]) => {
     t.test(message, (assert) => {
