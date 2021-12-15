@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/node:10.16.0
+    steps:
+      - checkout
+      - run: yarn
+      - run: yarn lint
+      - run: yarn test:unit
+      - run: yarn test:feature
+workflows:
+  version: 2
+  test_builds:
+    jobs:
+      - test
+  tagged_builds:
+    jobs:
+      - publish:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/

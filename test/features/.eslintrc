@@ -1,0 +1,7 @@
+{
+  "rules": {
+    "func-names": 0,
+    "new-cap": 0,
+    "prefer-arrow-callback": 0
+  }
+}
